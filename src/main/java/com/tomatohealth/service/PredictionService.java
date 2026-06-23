@@ -179,7 +179,12 @@ public class PredictionService {
      */
     private MLPredictionResponse callMLService(MultipartFile file) {
         try {
-            RestTemplate restTemplate = new RestTemplate();
+            // Configure timeouts for Render free-tier cold starts
+            org.springframework.http.client.SimpleClientHttpRequestFactory factory =
+                    new org.springframework.http.client.SimpleClientHttpRequestFactory();
+            factory.setConnectTimeout(90000);  // 90 seconds
+            factory.setReadTimeout(90000);     // 90 seconds
+            RestTemplate restTemplate = new RestTemplate(factory);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -194,6 +199,7 @@ public class PredictionService {
 
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
+            log.info("Calling ML service at: {}/predict", mlServiceUrl);
             ResponseEntity<MLPredictionResponse> response = restTemplate.exchange(
                     mlServiceUrl + "/predict",
                     HttpMethod.POST,

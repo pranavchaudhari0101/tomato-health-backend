@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/tomato_health_db
-    username: postgres
-    password: postgres
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/tomato_health_db}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -24,13 +24,13 @@ spring:
 
 # JWT Configuration
 jwt:
-  secret: tomatoHealthSecretKeyForJWTAuthentication2024VeryLongSecureKey
+  secret: ${JWT_SECRET:tomatoHealthSecretKeyForJWTAuthentication2024VeryLongSecureKey}
   expiration: 86400000
 
 # Flask ML Service Configuration
 ml:
   service:
-    url: http://localhost:5000
+    url: ${ML_SERVICE_URL:http://localhost:5000}
 
 # Cloudinary Configuration
 cloudinary:
